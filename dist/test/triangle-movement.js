@@ -38,6 +38,8 @@ fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
         let tri = testTriangleCreation(factory);
         //console.log(factory.base_triangle.slice(3, 6));
         console.log(tri.values);
+        tri.changeToCumulative();
+        console.log(tri.values);
     }
     else {
         console.log(error);

@@ -1,18 +1,19 @@
-interface TrianglePeriods {
-    origin: number;
-    development: number;
-}
 declare class VerticalHeader {
 }
 declare class HorizontalHeader {
 }
 export declare class Triangle {
     values: number[][];
-    periods: TrianglePeriods;
     v_header: VerticalHeader;
     h_header: HorizontalHeader;
     cumulative: boolean;
-    constructor(values: number[][], cumulative: boolean);
+    shape: number[];
+    periods: number[];
+    constructor(values: number[][], cumulative: boolean, periods: number[]);
+    maxColIndex(row: number): number;
+    toggleCumulative(): void;
+    changeToCumulative(): void;
+    changeToMovement(): void;
 }
 export declare class TriangleFactory {
     base_triangle: number[][];
