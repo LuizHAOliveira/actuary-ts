@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { TriangleFactory, createClassFactoryFromMovement } from '../triangle';
+import { Triangle, TriangleFactory, createClassFactoryFromMovement } from '../triangle';
 import path = require('path');
 
 let triangleMoveFile: string = path.resolve(__dirname, 'triangle_movement.csv');
@@ -10,9 +10,9 @@ interface TriangleCreationInfos {
     development: number[]
 }
 
-function FileToArrays(data: string): TriangleCreationInfos {
+function fileToArrays(data: string): TriangleCreationInfos {
     let rows: string[] = data.split('\n');
-    rows.shift();
+    rows.shift(); // Skip first line
     let cols: string[];
     let parsedData: TriangleCreationInfos = {
         values: [],
@@ -27,16 +27,25 @@ function FileToArrays(data: string): TriangleCreationInfos {
     });
     return parsedData;
 }
-function TestTriangleCreation(data: string) {
-    let parsedData: TriangleCreationInfos = FileToArrays(data);
+function testTriangleFactoryCreation(data: string): TriangleFactory {
+    let parsedData: TriangleCreationInfos = fileToArrays(data);
     let triFactory: TriangleFactory = createClassFactoryFromMovement(parsedData.values,
         parsedData.origin,
         parsedData.development);
-    console.log(triFactory.base_triangle);
+    console.log('TriangleFactory created succesfully');
+    return triFactory;
+}
+function testTriangleCreation(factory: TriangleFactory): Triangle {
+    let tri: Triangle = factory.buildMovementTriangle(3, 1);
+    console.log('Triangle created succesfully');
+    return tri;
 }
 fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
     if (data != undefined) {
-        TestTriangleCreation(data);
+        let factory: TriangleFactory = testTriangleFactoryCreation(data);
+        let tri = testTriangleCreation(factory);
+        //console.log(factory.base_triangle.slice(3, 6));
+        console.log(tri.values);
     } else {
 
         console.log(error);

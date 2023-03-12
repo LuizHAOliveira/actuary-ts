@@ -27,8 +27,39 @@ export class Triangle {
 
 export class TriangleFactory {
     base_triangle: number[][];
+    shape: number[];
     constructor (base_triangle: number[][]) {
         this.base_triangle = base_triangle;
+        this.shape = [base_triangle.length, base_triangle[0].length];
+    }
+
+    private checkValidPeriods(originPeriod: number, developmentPeriod: number): boolean {
+        if (originPeriod % developmentPeriod == 0)
+            return true;
+        return false;
+    }
+
+    buildMovementTriangle(originPeriod: number, developmentPeriod: number): Triangle {
+        if (!this.checkValidPeriods(originPeriod, developmentPeriod))
+            throw Error('Invalid period combination');
+        let shape: number[] = this.shape;
+        let originSize: number = Math.floor(shape[0] /  originPeriod) + Math.min(shape[0] % originPeriod, 1);
+        let devSize: number = Math.floor(shape[1] /  developmentPeriod) + Math.min(shape[1] % developmentPeriod, 1);
+        let leftOvers = shape[1] % developmentPeriod;
+        let correction = leftOvers > 0 ? 1 : 0;
+        let tri: number[][] = Array.apply(null, new Array(originSize)).map(
+            ()=> Array.apply(null, new Array(devSize)).map(()=> 0)
+            );
+        let newI: number; let newJ: number; let relMonths: number;
+        for (let i: number = 0; i < shape[0]; i++) {
+            for (let j: number = 0; j < shape[1] - i; j++) {
+                newI = Math.floor(i / originPeriod);
+                relMonths = i % originPeriod + j;
+                newJ = Math.floor((relMonths - leftOvers) / developmentPeriod) + correction;
+                tri[newI][newJ] += this.base_triangle[i][j];
+            }
+        }
+        return new Triangle(tri, false);
     }
 }
 

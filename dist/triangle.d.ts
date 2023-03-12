@@ -16,7 +16,10 @@ export declare class Triangle {
 }
 export declare class TriangleFactory {
     base_triangle: number[][];
+    shape: number[];
     constructor(base_triangle: number[][]);
+    private checkValidPeriods;
+    buildMovementTriangle(originPeriod: number, developmentPeriod: number): Triangle;
 }
 export declare function createClassFactoryFromMovement(values: number[], origin: number[], development: number[], originSize?: number, developmentSize?: number): TriangleFactory;
 export {};
