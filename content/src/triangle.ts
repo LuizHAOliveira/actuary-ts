@@ -5,24 +5,20 @@ function create2dArray(rowSize: number, colSize: number): number[][] {
         );
     return arr;
 }
-/*interface TrianglePeriods {
-    origin: number,
-    development: number
-}
-*/
-class VerticalHeader {
 
-}
-class HorizontalHeader {
-
+export class Vector {
+    values: number[];
+    shape: number;
+    period: number;
+    constructor (values: number[], period: number) {
+        this.values = values;
+        this.period = period;
+        this.shape = values.length;
+    }
 }
 
 export class Triangle {
     values: number[][];
-    //months_span: list # (ori, dev)
-    //ref_date: date
-    v_header: VerticalHeader;
-    h_header: HorizontalHeader;
     cumulative: boolean;
     shape: number[];
     periods: number[];
@@ -36,7 +32,24 @@ export class Triangle {
         let devOriRatio: number = Math.floor(this.periods[0] / this.periods[1]);
         let index: number = this.shape[1] - row * devOriRatio - 1
         return index;
-    } 
+    }
+    getDiagonal(diagonalIndex?: number) {
+        if (diagonalIndex == undefined)
+            diagonalIndex = 0;
+        else if (diagonalIndex < 0)
+            throw Error('The value of \'diagonalIndex\' must be non-negative.');
+        ;
+        let diagonal: number[] = Array.apply(null, new Array(this.shape[0])).map(()=> 0);
+        let index: number;
+        for (let i: number = 0; i < this.shape[0]; i++) {
+            index = this.maxColIndex(i) - diagonalIndex;
+            if (index >= 0)
+                diagonal[i] = this.values[i][index];
+            else
+                diagonal[i] = 0;
+        }
+        return new Vector(diagonal, this.periods[0]);
+    }   
     toggleCumulative() {
         if (this.cumulative)
             this.changeToMovement();
@@ -108,7 +121,7 @@ export class TriangleFactory {
 export function createClassFactoryFromMovement (values: number[], origin: number[], development: number[],
         originSize?: number, developmentSize?: number): TriangleFactory {
     if (values.length != origin.length || origin.length != development.length)
-        throw Error('The passed arrays are not of the same lenght.');
+        throw Error('The passed arrays are not of the same length.');
     if (originSize == undefined)
         originSize = Math.max(...origin) + 1;
     if (developmentSize == undefined) {
