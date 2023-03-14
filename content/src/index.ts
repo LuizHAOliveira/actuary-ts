@@ -1,2 +1,2 @@
-export {Triangle, TriangleFactory} from './triangle'
+export {Triangle, TriangleFactory} from './basic-classes'
 

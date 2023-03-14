@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { Triangle, TriangleFactory, createClassFactoryFromMovement } from '../triangle';
+import { Triangle, TriangleFactory, createClassFactoryFromMovement } from '../basic-classes';
 import path = require('path');
 
 let triangleMoveFile: string = path.resolve(__dirname, 'triangle_movement.csv');
