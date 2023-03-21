@@ -1,4 +1,4 @@
-import { Triangle } from "./basic-classes";
+import { Triangle, create2dArray } from "./basic-classes";
 
 
 class DFMFactors {
@@ -24,8 +24,41 @@ class DFMFactors {
 }
 class DFCalculator {
     triangle: Triangle
-    dfs_triangle: number[][]
-    selection_tri: number[][]
+    dfsTriangle: number[][]
+    selections: number[][]
+
+    constructor (triangle: Triangle) {
+        triangle.changeToCumulative(); // Should change this variable to be passed by value
+        this.triangle = triangle;
+        this.calculateDFTriangle();
+    }
+    private calculateDFTriangle () {
+        let dfsTriangle: number[][] = create2dArray(this.triangle.shape[0]-1, this.triangle.shape[1]-1);
+        for (let i: number = 0; i < dfsTriangle.length; i++) {
+            for (let j: number = 0; j < this.triangle.maxColIndex(i) - 1; j++) {
+                dfsTriangle[i][j] = this.triangle[i][j+1] / this.triangle[i][j];
+            }
+        }
+        this.dfsTriangle = dfsTriangle;
+    }
+    private initializeSelections () {
+        //let selections: number[][] = Array.apply(null, new Array(this.triangle.shape[0]-1)).map(
+        //    ()=> Array.apply(null, new Array(this.triangle.shape[1]-1)).map(()=> 1)
+        //    );
+        let selections: number[][] = create2dArray(this.triangle.shape[0]-1, this.triangle.shape[1]-1);
+        for (let i: number = 0; i < selections.length; i++) {
+            for (let j: number = 0; j < this.triangle.maxColIndex(i) - 1; j++) {
+                if (this.triangle[i][j] > 0)
+                    selections[i][j] = 1;
+            }
+        }
+        this.selections = selections;
+    }
+    // calculate (): DFMFactors {
+        
+    //     return new DFMFactors();
+    // }
+
 }
 /*
 class DFCalculator:
