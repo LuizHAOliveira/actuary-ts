@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClassFactoryFromMovement = exports.TriangleFactory = exports.Triangle = void 0;
+exports.createClassFactoryFromMovement = exports.TriangleFactory = exports.Triangle = exports.Vector = exports.create2dArray = void 0;
 function create2dArray(rowSize, colSize) {
     let arr = Array.apply(null, new Array(rowSize)).map(() => Array.apply(null, new Array(colSize)).map(() => 0));
     return arr;
 }
-/*interface TrianglePeriods {
-    origin: number,
-    development: number
+exports.create2dArray = create2dArray;
+class Vector {
+    constructor(values, period) {
+        this.values = values;
+        this.period = period;
+        this.shape = values.length;
+    }
 }
-*/
-class VerticalHeader {
-}
-class HorizontalHeader {
-}
+exports.Vector = Vector;
 class Triangle {
     constructor(values, cumulative, periods) {
         this.values = values;
@@ -26,7 +26,28 @@ class Triangle {
         let index = this.shape[1] - row * devOriRatio - 1;
         return index;
     }
+    getDiagonal(diagonalIndex) {
+        if (diagonalIndex == undefined)
+            diagonalIndex = 0;
+        else if (diagonalIndex < 0)
+            throw Error('The value of \'diagonalIndex\' must be non-negative.');
+        ;
+        let diagonal = Array.apply(null, new Array(this.shape[0])).map(() => 0);
+        let index;
+        for (let i = 0; i < this.shape[0]; i++) {
+            index = this.maxColIndex(i) - diagonalIndex;
+            if (index >= 0)
+                diagonal[i] = this.values[i][index];
+            else
+                diagonal[i] = 0;
+        }
+        return new Vector(diagonal, this.periods[0]);
+    }
     toggleCumulative() {
+        if (this.cumulative)
+            this.changeToMovement();
+        else
+            this.changeToCumulative();
     }
     changeToCumulative() {
         if (this.cumulative)
@@ -38,6 +59,7 @@ class Triangle {
                 newTri[i][j] = newTri[i][j - 1] + this.values[i][j];
             }
         }
+        this.cumulative = true;
         this.values = newTri;
     }
     changeToMovement() {
@@ -50,6 +72,7 @@ class Triangle {
                 newTri[i][j] = this.values[i][j] - this.values[i][j - 1];
             }
         }
+        this.cumulative = false;
         this.values = newTri;
     }
 }
@@ -90,7 +113,7 @@ class TriangleFactory {
 exports.TriangleFactory = TriangleFactory;
 function createClassFactoryFromMovement(values, origin, development, originSize, developmentSize) {
     if (values.length != origin.length || origin.length != development.length)
-        throw Error('The passed arrays are not of the same lenght.');
+        throw Error('The passed arrays are not of the same length.');
     if (originSize == undefined)
         originSize = Math.max(...origin) + 1;
     if (developmentSize == undefined) {

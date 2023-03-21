@@ -1,5 +1,5 @@
 
-function create2dArray(rowSize: number, colSize: number): number[][] {
+export function create2dArray(rowSize: number, colSize: number): number[][] {
     let arr = Array.apply(null, new Array(rowSize)).map(
         ()=> Array.apply(null, new Array(colSize)).map(()=> 0)
         );
@@ -66,6 +66,7 @@ export class Triangle {
                 newTri[i][j] = newTri[i][j-1] + this.values[i][j];
             }
         }
+        this.cumulative = true;
         this.values = newTri;
     }
     changeToMovement () {
@@ -78,6 +79,7 @@ export class Triangle {
                 newTri[i][j] =  this.values[i][j] -  this.values[i][j-1];
             }
         }
+        this.cumulative = false;
         this.values = newTri;
     }
 }
