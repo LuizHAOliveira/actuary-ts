@@ -28,7 +28,7 @@ export class Triangle {
         this.periods = periods;
         this.shape = [values.length, values[0].length];
     }
-    maxColIndex(row: number): number {
+    maxColIndex(row: number): number { // It is not the size of the column, but the index of the matrix
         let devOriRatio: number = Math.floor(this.periods[0] / this.periods[1]);
         let index: number = this.shape[1] - row * devOriRatio - 1
         return index;
