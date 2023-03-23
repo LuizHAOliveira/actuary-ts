@@ -27,7 +27,7 @@ function fileToArrays(data: string): TriangleCreationInfos {
     });
     return parsedData;
 }
-function triangleFactoryCreation(data: string): TriangleFactory {
+export function triangleFactoryCreation(data: string): TriangleFactory {
     let parsedData: TriangleCreationInfos = fileToArrays(data);
     let triFactory: TriangleFactory = createClassFactoryFromMovement(parsedData.values,
         parsedData.origin,
@@ -92,10 +92,12 @@ function testTriangleDiagonal(tri: Triangle): boolean {
         console.log(diagonal_2.values);
     return false;
 }
-//fs.readFileSync(triangleMoveFile, 'utf-8');
-fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
-    if (data != undefined) {
-        let factory: TriangleFactory = triangleFactoryCreation(data);
+
+function testTriangles(data: string) {
+    // Not the best solution, but it works for now
+    // We are testing only the most complex case: the one in which origin and development periods
+    // are different
+    let factory: TriangleFactory = triangleFactoryCreation(data);
         if (!testTriangleFactoryCreation(factory))
             return;
         let tri = triangleCreation(factory);
@@ -111,8 +113,17 @@ fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
             return;
         if (!testTriangleDiagonal(tri))
             return;
-    } else {
-        console.log(error);
-    }
-});
+}
+
+export function readFileAndTest(testFunction: Function) {
+    fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
+        if (data != undefined) {
+            testFunction(data);
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+readFileAndTest(testTriangles);
 
