@@ -90,13 +90,3 @@ function calculateDFMUltimate(triangle, factors) {
     return new basic_classes_1.Vector(ultimateVals, triangle.periods[0]);
 }
 exports.calculateDFMUltimate = calculateDFMUltimate;
-// def calculate_dfm_ultimate(triangle: Triangle, factors: DFMFactors) -> Ultimate:
-//     if triangle.development_period != factors.period:
-//         raise
-//     dev_ori_ratio = triangle.origin_period / triangle.development_period
-//     triangle.change_to_cumulative()
-//     ultimate_val = np.zeros(triangle.shape[0])
-//     cdfs = np.flip(factors.cdf)
-//     for i in range(triangle.shape[0]):
-//         ultimate_val[i] = triangle.get_diagonal()[i] * cdfs[int(i*dev_ori_ratio)]
-//     return Ultimate(ultimate_val, triangle.months_span[0], triangle.origin_period, triangle.ref_date)
