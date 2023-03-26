@@ -1,4 +1,15 @@
 .idea
 ~$Example Triangle.xlsx
-./node-modules/
-./dist/
+node-modules/
+dist/
+dist/basic-classes.d.ts
+dist/basic-classes.js
+dist/dfm.d.ts
+dist/dfm.js
+dist/index.d.ts
+dist/index.js
+dist/src/basic-classes.d.ts
+dist/src/basic-classes.js
+dist/src/index.d.ts
+dist/src/index.js
+dist/test/triangle-creation.js
