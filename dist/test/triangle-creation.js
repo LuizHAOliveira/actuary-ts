@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.readFileAndTest = exports.triangleFactoryCreation = void 0;
 const fs = require("fs");
 const basic_classes_1 = require("../src/basic-classes");
 const path = require("path");
@@ -26,6 +27,7 @@ function triangleFactoryCreation(data) {
     let triFactory = (0, basic_classes_1.createClassFactoryFromMovement)(parsedData.values, parsedData.origin, parsedData.development);
     return triFactory;
 }
+exports.triangleFactoryCreation = triangleFactoryCreation;
 function testTriangleFactoryCreation(triFac) {
     if (Math.abs(triFac.base_triangle[3][10] - 46.9293780830976) < 0.001
         && Math.abs(triFac.base_triangle[1][0] - 5249.6951491389) < 0.001) {
@@ -84,27 +86,36 @@ function testTriangleDiagonal(tri) {
     console.log(diagonal_2.values);
     return false;
 }
-//fs.readFileSync(triangleMoveFile, 'utf-8');
-fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
-    if (data != undefined) {
-        let factory = triangleFactoryCreation(data);
-        if (!testTriangleFactoryCreation(factory))
-            return;
-        let tri = triangleCreation(factory);
-        if (!testTriangleCreation(tri))
-            return;
-        tri.changeToCumulative();
-        if (!testTriangleChangeToCumulative(tri))
-            return;
-        tri.changeToMovement();
-        if (!testTriangleChangeToMovement(tri))
-            return;
-        if (!testTriangleChangeToMovement(tri))
-            return;
-        if (!testTriangleDiagonal(tri))
-            return;
-    }
-    else {
-        console.log(error);
-    }
-});
+function testTriangles(data) {
+    // Not the best solution, but it works for now
+    // We are testing only the most complex case: the one in which origin and development periods
+    // are different
+    let factory = triangleFactoryCreation(data);
+    if (!testTriangleFactoryCreation(factory))
+        return;
+    let tri = triangleCreation(factory);
+    if (!testTriangleCreation(tri))
+        return;
+    tri.changeToCumulative();
+    if (!testTriangleChangeToCumulative(tri))
+        return;
+    tri.changeToMovement();
+    if (!testTriangleChangeToMovement(tri))
+        return;
+    if (!testTriangleChangeToMovement(tri))
+        return;
+    if (!testTriangleDiagonal(tri))
+        return;
+}
+function readFileAndTest(testFunction) {
+    fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
+        if (data != undefined) {
+            testFunction(data);
+        }
+        else {
+            console.log(error);
+        }
+    });
+}
+exports.readFileAndTest = readFileAndTest;
+readFileAndTest(testTriangles);

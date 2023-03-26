@@ -1,78 +1,102 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.calculateDFMUltimate = exports.DFCalculator = exports.DFMFactors = void 0;
 const basic_classes_1 = require("./basic-classes");
 class DFMFactors {
-    constructor(df, period, tail) {
+    set tail(newTail) {
+        if (newTail < -1)
+            throw Error('The tail of a DFM cannot assume values below 100%.');
+        this.tail_ = newTail;
+        this.calculateCDF();
+    }
+    get tail() {
+        return this.tail_;
+    }
+    constructor(df, /*period: number,*/ tail) {
         this.df = df;
         //this.period = period;
         if (tail == undefined)
             tail = 0;
-        this.tail = tail;
+        this.tail_ = tail;
         this.calculateCDF();
     }
     calculateCDF() {
         this.cdf = new Array(this.df.length + 1);
-        this.cdf[this.df.length] = 1 + this.tail;
+        this.cdf[this.df.length] = 1 + this.tail_;
         for (let i = this.df.length - 1; i >= 0; i--) {
             this.cdf[i] = this.cdf[i + 1] * this.df[i];
         }
     }
 }
+exports.DFMFactors = DFMFactors;
 class DFCalculator {
     constructor(triangle) {
         triangle.changeToCumulative(); // Should change this variable to be passed by value
         this.triangle = triangle;
         this.calculateDFTriangle();
+        this.initializeSelections();
     }
     calculateDFTriangle() {
         let dfsTriangle = (0, basic_classes_1.create2dArray)(this.triangle.shape[0] - 1, this.triangle.shape[1] - 1);
+        this.triangle.changeToCumulative();
         for (let i = 0; i < dfsTriangle.length; i++) {
-            for (let j = 0; j < this.triangle.maxColIndex(i) - 1; j++) {
-                dfsTriangle[i][j] = this.triangle[i][j + 1] / this.triangle[i][j];
+            for (let j = 0; j < this.triangle.maxColIndex(i); j++) {
+                dfsTriangle[i][j] = this.triangle.values[i][j + 1] / this.triangle.values[i][j];
             }
         }
         this.dfsTriangle = dfsTriangle;
     }
     initializeSelections() {
-        //let selections: number[][] = Array.apply(null, new Array(this.triangle.shape[0]-1)).map(
-        //    ()=> Array.apply(null, new Array(this.triangle.shape[1]-1)).map(()=> 1)
-        //    );
         let selections = (0, basic_classes_1.create2dArray)(this.triangle.shape[0] - 1, this.triangle.shape[1] - 1);
+        this.triangle.changeToCumulative();
         for (let i = 0; i < selections.length; i++) {
-            for (let j = 0; j < this.triangle.maxColIndex(i) - 1; j++) {
-                if (this.triangle[i][j] > 0)
+            for (let j = 0; j < this.triangle.maxColIndex(i); j++) {
+                if (this.triangle.values[i][j] > 0)
                     selections[i][j] = 1;
             }
         }
         this.selections = selections;
     }
+    calculate() {
+        this.triangle.changeToCumulative();
+        let factors = Array.apply(null, new Array(this.triangle.shape[1] - 1)).map(() => 0);
+        let numerator;
+        let denominator;
+        for (let j = 0; j < this.triangle.shape[1] - 1; j++) {
+            numerator = 0;
+            denominator = 0;
+            let i = 0;
+            while (j < this.triangle.maxColIndex(i)) {
+                numerator += this.triangle.values[i][j + 1] * this.selections[i][j];
+                denominator += this.triangle.values[i][j] * this.selections[i][j];
+                i++;
+            }
+            factors[j] = numerator / denominator;
+        }
+        return new DFMFactors(factors);
+    }
 }
-/*
-class DFCalculator:
-    triangle: Triangle
-    dfs_triangle: np.array
-    selection_tri: np.array
-
-    def __init__(self, triangle: Triangle) -> None:
-        self.triangle = triangle
-        self._calculate_dfs_triangle()
-
-    def _calculate_dfs_triangle(self) -> None:
-        shape = self.triangle.shape
-        self.triangle.change_to_cumulative()
-        tri = self.triangle.values
-        self.dfs_triangle = np.full(shape, np.nan)
-        for i in range(shape[0]):
-            for j in range(self.triangle.maxcol_index(i)):
-                self.dfs_triangle[i, j] = tri[i, j+1] / tri[i, j]
-        self.selection_tri = self.dfs_triangle / self.dfs_triangle
-
-    def calculate(self) -> DFMFactors:
-        self.triangle.change_to_cumulative()
-        tri_below = self.triangle.values
-        tri_above = np.roll(tri_below, -1, 1)
-        df = np.nansum(tri_above * self.selection_tri, 0) / np.nansum(tri_below * self.selection_tri, 0)
-        df = df[:-1]
-        df[np.isnan(df)] = 1
-        return DFMFactors(df, self.triangle.months_span[1], self.triangle.periods[1])
-*/ 
+exports.DFCalculator = DFCalculator;
+function calculateDFMUltimate(triangle, factors) {
+    // Since we are not storing the information related to periods and month spans
+    // We are suposing that they match between the triangle and the CDF
+    triangle.changeToCumulative();
+    let ultimateVals = Array.apply(null, new Array(triangle.shape[0])).map(() => 0);
+    let diagonal = triangle.getDiagonal();
+    for (let i = 0; i < triangle.shape[0]; i++) {
+        console.log(diagonal.values[i], factors.cdf[triangle.shape[0] - i - 1]);
+        ultimateVals[i] = diagonal.values[i] * factors.cdf[triangle.shape[0] - i - 1];
+    }
+    return new basic_classes_1.Vector(ultimateVals, triangle.periods[0]);
+}
+exports.calculateDFMUltimate = calculateDFMUltimate;
+// def calculate_dfm_ultimate(triangle: Triangle, factors: DFMFactors) -> Ultimate:
+//     if triangle.development_period != factors.period:
+//         raise
+//     dev_ori_ratio = triangle.origin_period / triangle.development_period
+//     triangle.change_to_cumulative()
+//     ultimate_val = np.zeros(triangle.shape[0])
+//     cdfs = np.flip(factors.cdf)
+//     for i in range(triangle.shape[0]):
+//         ultimate_val[i] = triangle.get_diagonal()[i] * cdfs[int(i*dev_ori_ratio)]
+//     return Ultimate(ultimate_val, triangle.months_span[0], triangle.origin_period, triangle.ref_date)

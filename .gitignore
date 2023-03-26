@@ -1,2 +1,4 @@
 .idea
 ~$Example Triangle.xlsx
+./node-modules/
+./dist/

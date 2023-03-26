@@ -8,7 +8,7 @@
     "/dist"
   ],
   "scripts": {
-    "test": "node dist/test/triangle-movement.js",
+    "test": "node dist/test/triangle-creation.js && node dist/test/dfm-tests.js",
     "build": "tsc",
     "publish-lib": "npm run build && npm publish",
     "publish-beta": "npm run build && npm publish --tag beta",
