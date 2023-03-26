@@ -1,7 +1,7 @@
 {
   "name": "actuary-ts",
   "version": "0.0.1",
-  "description": "The goal of this library is to be a tool for calculating reserves using actuarial methods.",
+  "description": "The goal of this library is to be a tool for calculating insurance reserves using actuarial methods.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
