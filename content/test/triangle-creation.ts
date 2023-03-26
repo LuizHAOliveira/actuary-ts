@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { Triangle, TriangleFactory, Vector, createClassFactoryFromMovement } from '../src/basic-classes';
+import { Triangle, TriangleFactory, Vector, createTriangleFactoryFromMovement } from '../src/basic-classes';
 import path = require('path');
 
 let triangleMoveFile: string = path.resolve(__dirname, 'triangle_movement.csv');
@@ -29,7 +29,7 @@ function fileToArrays(data: string): TriangleCreationInfos {
 }
 export function triangleFactoryCreation(data: string): TriangleFactory {
     let parsedData: TriangleCreationInfos = fileToArrays(data);
-    let triFactory: TriangleFactory = createClassFactoryFromMovement(parsedData.values,
+    let triFactory: TriangleFactory = createTriangleFactoryFromMovement(parsedData.values,
         parsedData.origin,
         parsedData.development);
     return triFactory;

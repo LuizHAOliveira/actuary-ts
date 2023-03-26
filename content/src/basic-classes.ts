@@ -120,7 +120,7 @@ export class TriangleFactory {
     }
 }
 
-export function createClassFactoryFromMovement (values: number[], origin: number[], development: number[],
+export function createTriangleFactoryFromMovement (values: number[], origin: number[], development: number[],
         originSize?: number, developmentSize?: number): TriangleFactory {
     if (values.length != origin.length || origin.length != development.length)
         throw Error('The passed arrays are not of the same length.');
