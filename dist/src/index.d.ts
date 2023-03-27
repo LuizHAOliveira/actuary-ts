@@ -1,2 +1,2 @@
-export { Triangle, TriangleFactory, Vector } from './basic-classes';
+export { Triangle, TriangleFactory, Vector, createTriangleFactoryFromMovement } from './basic-classes';
 export { DFCalculator, DFMFactors, calculateDFMUltimate } from './dfm';

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClassFactoryFromMovement = exports.TriangleFactory = exports.Triangle = exports.Vector = exports.create2dArray = void 0;
+exports.createTriangleFactoryFromMovement = exports.TriangleFactory = exports.Triangle = exports.Vector = exports.create2dArray = void 0;
 function create2dArray(rowSize, colSize) {
     let arr = Array.apply(null, new Array(rowSize)).map(() => Array.apply(null, new Array(colSize)).map(() => 0));
     return arr;
@@ -111,7 +111,7 @@ class TriangleFactory {
     }
 }
 exports.TriangleFactory = TriangleFactory;
-function createClassFactoryFromMovement(values, origin, development, originSize, developmentSize) {
+function createTriangleFactoryFromMovement(values, origin, development, originSize, developmentSize) {
     if (values.length != origin.length || origin.length != development.length)
         throw Error('The passed arrays are not of the same length.');
     if (originSize == undefined)
@@ -128,4 +128,4 @@ function createClassFactoryFromMovement(values, origin, development, originSize,
     }
     return new TriangleFactory(tri);
 }
-exports.createClassFactoryFromMovement = createClassFactoryFromMovement;
+exports.createTriangleFactoryFromMovement = createTriangleFactoryFromMovement;

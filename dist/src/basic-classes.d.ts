@@ -24,4 +24,4 @@ export declare class TriangleFactory {
     private checkValidPeriods;
     buildMovementTriangle(originPeriod: number, developmentPeriod: number): Triangle;
 }
-export declare function createClassFactoryFromMovement(values: number[], origin: number[], development: number[], originSize?: number, developmentSize?: number): TriangleFactory;
+export declare function createTriangleFactoryFromMovement(values: number[], origin: number[], development: number[], originSize?: number, developmentSize?: number): TriangleFactory;

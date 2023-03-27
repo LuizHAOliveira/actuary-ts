@@ -24,7 +24,7 @@ function fileToArrays(data) {
 }
 function triangleFactoryCreation(data) {
     let parsedData = fileToArrays(data);
-    let triFactory = (0, basic_classes_1.createClassFactoryFromMovement)(parsedData.values, parsedData.origin, parsedData.development);
+    let triFactory = (0, basic_classes_1.createTriangleFactoryFromMovement)(parsedData.values, parsedData.origin, parsedData.development);
     return triFactory;
 }
 exports.triangleFactoryCreation = triangleFactoryCreation;
