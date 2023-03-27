@@ -1,5 +1,6 @@
 import { TriangleFactory, Triangle, Vector, DFCalculator, DFMFactors, calculateDFMUltimate } from "../src";
-import { readFileAndTest, triangleFactoryCreation } from "./triangle-creation";
+import { triangleFactoryCreation } from "./triangle-creation";
+import { data } from './test-data';
 
 function testDFMCalculator(dfmCalc: DFCalculator) {
     if (Math.abs(dfmCalc.dfsTriangle[0][2] - 1.016751024) < 0.001
@@ -33,4 +34,5 @@ function testDFM(data: string) {
     testDFMUltimate(tri, dfms)
 }
 
-readFileAndTest(testDFM);
+testDFM(data);
+//readFileAndTest(testDFM);

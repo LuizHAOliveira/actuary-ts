@@ -1,8 +1,8 @@
-import * as fs from 'fs';
 import { Triangle, TriangleFactory, Vector, createTriangleFactoryFromMovement } from '../src/basic-classes';
-import path = require('path');
+import { data } from './test-data';
 
-let triangleMoveFile: string = path.resolve(__dirname, 'triangle_movement.csv');
+//let triangleMoveFile: string = path.resolve(__dirname, 'triangle_movement.csv');
+let triangleMoveFile: string = './triangle_movement.csv';
 
 interface TriangleCreationInfos {
     values: number[],
@@ -115,15 +115,18 @@ function testTriangles(data: string) {
             return;
 }
 
-export function readFileAndTest(testFunction: Function) {
-    fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
-        if (data != undefined) {
-            testFunction(data);
-        } else {
-            console.log(error);
-        }
-    });
-}
 
-readFileAndTest(testTriangles);
+testTriangles(data);
+
+//export function readFileAndTest(testFunction: Function) {
+//    fs.readFile(triangleMoveFile, 'utf8', (error, data) => {
+//         if (data != undefined) {
+//             testFunction(data);
+//         } else {
+//             console.log(error);
+//         }
+//     });
+// }
+
+//readFileAndTest(testTriangles);
 
