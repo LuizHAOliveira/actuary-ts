@@ -12,23 +12,37 @@ npm install actuary-ts
 ```
 ## Usage
 
+A simple use case is shown below. The steps can be described as:
+1. Load the data inside a factory;
+2. Choose an approprited period of analysis; for the Triangle
+3. Load the Triangle into the DFMCalculator;
+4. Calculate the DF factors;
+5. With the factors, calculate the DFM Ultimate;
 ```typescript
-import { Triangle, TriangleFactory } from "actuary-ts";
+import { Vector, Triangle, TriangleFactory } from "actuary-ts";
+import { DFCalculator, DFMFactors, calculateDFMUltimate } from "actuary-ts";
 
 let data: number[][] = [
-    [4654.44, 6516.21, 8377.99, 8447.99, 8513.10, 8573.95],
-    [5249.70, 7349.57, 9449.45, 9528.41, 9601.84, 0],
-    [5089.61, 7125.46, 9161.30, 9237.85, 0,       0],
-    [4763.19, 6668.46, 8573.74, 0,       0,   	  0],
-    [5372.87, 7522.02, 0,       0,       0,   	  0],
-    [5299.05, 0,       0,       0,       0,   	  0]
+    [4654,	1862,	1862,	70,	65,	61],
+    [5250,	2100,	2100,	79,	73,	0],
+    [5090,	2036,	2036,	77,	0,	0],
+    [4763,	1905,	1905,	0,	0,	0],
+    [5373,	2149,	0,	    0,	0,	0],
+    [5299,	0,      0,	    0,	0,	0]
 ];
+// Let build the Factory and the Triangle
 let fac = new TriangleFactory(data);
 let tri: Triangle = fac.buildMovementTriangle(2, 2);
-
-console.log(tri);
 tri.changeToCumulative();
-console.log(tri);
+console.log('The Triangle', tri.values);
+
+// Let get some DFMs
+let dfm: DFCalculator = DFCalculator(tri);
+let dfFactors: DFMFactors = dfm.calculate();
+// Use dfm.selections to change the datapoints used in estimation
+
+let ultimate: Vector = calculateDFMUltimate(triangle: Triangle, factors: DFMFactors);
+console.log('Calculated Ultimate', ultimate.values);
 ```
 
 ## Contributing
