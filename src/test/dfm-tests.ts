@@ -1,4 +1,4 @@
-import { TriangleFactory, Triangle, Vector, DFCalculator, DFMFactors, calculateDFMUltimate } from "../src";
+import { TriangleFactory, Triangle, Vector, DFCalculator, DFMFactors, calculateDFMUltimate } from "../";
 import { triangleFactoryCreation } from "./triangle-creation";
 import { data } from './test-data';
 

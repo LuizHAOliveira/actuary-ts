@@ -1,4 +1,4 @@
-import { Triangle, TriangleFactory, Vector, createTriangleFactoryFromMovement } from '../src/basic-classes';
+import { Triangle, TriangleFactory, Vector, createTriangleFactoryFromMovement } from '../basic-classes';
 import { data } from './test-data';
 
 //let triangleMoveFile: string = path.resolve(__dirname, 'triangle_movement.csv');
